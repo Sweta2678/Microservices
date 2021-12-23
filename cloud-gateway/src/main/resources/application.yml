@@ -1,0 +1,48 @@
+server:
+    port : 8001
+    
+spring:
+    application:
+            name: API-GATEWAY
+    
+    cloud:
+      gateway:
+        routes:
+          - id: USER-SERVICE
+            uri: lb://USER-SERVICE
+            predicates:
+            - Path=/users/**
+#            filters:
+#              - RewritePath=/users/(?<path>.*), /$\{path}
+#              - name : CircuitBraker
+#                args : 
+#                  name : USER-SERVICE
+#                  fallbackuri : forward:/userServiceFallBack
+          - id: DEPARTMENT-SERVICE
+            uri: lb://DEPARTMENT-SERVICE
+            predicates:
+            - Path=/departments/**
+#            filters:
+#              - RewritePath=/departments/(?<path>.*), /$\{path}
+#            filters:
+#              - name : CircuitBraker
+#                args : 
+#                  name : DEPARTMENT-SERVICE
+#                  fallbackuri : forward:/departmentServiceFallBack  
+
+#hystrix:  
+#  command:
+#    default:
+#      execution:
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 40000
+           
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+        defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
